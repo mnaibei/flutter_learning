@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "978047623886",
+    "project_id": "mucha-flutter",
+    "storage_bucket": "mucha-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978047623886:android:3e85b130df04d79d04269f",
+        "android_client_info": {
+          "package_name": "com.muchanaibei.flutter_learning"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFDvrQS0eFIotr4NNgVwo9eSqupW2gxYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
