@@ -72,13 +72,24 @@ class _RegisterviewState extends State<Registerview> {
                                 password: _password.text,
                               );
                               final user = userCredential.user;
-                              print('User signed in: $user');
+                              await user!.sendEmailVerification();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                    'Verification email sent to ${user.email}'),
+                                duration: const Duration(seconds: 3),
+                              ));
+                              return Navigator.of(context)
+                                  .pushNamedAndRemoveUntil(
+                                      '/verify', (route) => false)
+                                  .then((_) {});
+                              // print('User signed in: $user');
                             } on FirebaseAuthException catch (e) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 content:
                                     Text('Error registering user: ${e.code}'),
-                                duration: Duration(seconds: 3),
+                                duration: const Duration(seconds: 3),
                               ));
                             }
                           },
