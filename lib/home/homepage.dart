@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_learning/constants/routes.dart';
-import '../firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-// import '../views/verify_email_view.dart';
+import 'package:flutter_learning/services/auth/auth_service.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,32 +12,26 @@ class HomePage extends StatelessWidget {
           title: const Text('Home'),
         ),
         body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
+          future: AuthService.firebase().initialize(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   Future.delayed(Duration.zero, () {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(notesRoute, (route) => false)
                         .then((_) {});
                   });
-                  // Future.delayed(Duration.zero, () {
-                  //   Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) => const NotesView(),
-                  //   ));
-                  // });
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Logged in as ${user!.email}'),
+                        Text(
+                            'Logged in as ${AuthService.firebase().currentUser}'),
                         ElevatedButton(
                           onPressed: () async {
-                            await FirebaseAuth.instance.signOut();
+                            AuthService.firebase().logOut();
                             return Navigator.pushNamed<void>(
                                 context, loginRoute);
                           },
@@ -56,10 +47,6 @@ class HomePage extends StatelessWidget {
                         .pushNamedAndRemoveUntil(
                             verifyEmailRoute, (route) => false)
                         .then((_) {});
-                    // Future.delayed(Duration.zero, () {
-                    //   Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (context) => const VerifyEmailView(),
-                    //   ));
                   });
                 }
               default:
