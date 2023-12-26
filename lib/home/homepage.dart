@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_learning/constants/routes.dart';
 import '../firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import '../views/verify_email_view.dart';
@@ -24,7 +25,7 @@ class HomePage extends StatelessWidget {
                 if (user?.emailVerified ?? false) {
                   Future.delayed(Duration.zero, () {
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/notes', (route) => false)
+                        .pushNamedAndRemoveUntil(notesRoute, (route) => false)
                         .then((_) {});
                   });
                   // Future.delayed(Duration.zero, () {
@@ -40,7 +41,8 @@ class HomePage extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () async {
                             await FirebaseAuth.instance.signOut();
-                            return Navigator.pushNamed<void>(context, '/login');
+                            return Navigator.pushNamed<void>(
+                                context, loginRoute);
                           },
                           child: const Text('Logout'),
                         ),
@@ -51,7 +53,8 @@ class HomePage extends StatelessWidget {
                   // Delay navigation to avoid conflicts during the build process
                   Future.delayed(Duration.zero, () {
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/verify', (route) => false)
+                        .pushNamedAndRemoveUntil(
+                            verifyEmailRoute, (route) => false)
                         .then((_) {});
                     // Future.delayed(Duration.zero, () {
                     //   Navigator.of(context).push(MaterialPageRoute(

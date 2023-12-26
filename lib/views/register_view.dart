@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_learning/constants/routes.dart';
+import 'package:flutter_learning/dialogs/show_error.dart';
 import '../firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -81,16 +85,19 @@ class _RegisterviewState extends State<Registerview> {
                               ));
                               return Navigator.of(context)
                                   .pushNamedAndRemoveUntil(
-                                      '/verify', (route) => false)
+                                      verifyEmailRoute, (route) => false)
                                   .then((_) {});
-                              // print('User signed in: $user');
                             } on FirebaseAuthException catch (e) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content:
-                                    Text('Error registering user: ${e.code}'),
-                                duration: const Duration(seconds: 3),
-                              ));
+                              if (e.code == "invalid-email") {
+                                showErrorDialog(context, "Invalid Email");
+                              } else if (e.code == "weak-password") {
+                                showErrorDialog(context, "Weak Password");
+                              } else if (e.code == "email-already-in-use") {
+                                showErrorDialog(
+                                    context, "Email Already in Use");
+                              } else {
+                                showErrorDialog(context, e.code);
+                              }
                             }
                           },
                           child: const Text('Register'),

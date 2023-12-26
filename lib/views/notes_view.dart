@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_learning/constants/routes.dart';
+import 'package:flutter_learning/dialogs/show_logout.dart';
 
 enum MenuAction { logout }
 
@@ -25,7 +27,7 @@ class _NotesViewState extends State<NotesView> {
                   if (shouldLogout) {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/login', (route) => false);
+                        .pushNamedAndRemoveUntil(loginRoute, (route) => false);
                   }
                   break;
               }
@@ -42,27 +44,16 @@ class _NotesViewState extends State<NotesView> {
       body: const Center(
         child: Text('Notes'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to the screen where users can create a new note
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => NewNoteScreen()),
+          // );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
-}
-
-Future<bool> showLogoutDialog(BuildContext context) async {
-  return await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Logout'),
-            ),
-          ],
-        ),
-      ) ??
-      false;
 }

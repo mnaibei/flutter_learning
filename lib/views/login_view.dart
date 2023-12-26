@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_learning/constants/routes.dart';
+import 'package:flutter_learning/dialogs/show_error.dart';
 import 'package:flutter_learning/views/register_view.dart';
 import '../firebase_options.dart';
 import 'dart:developer' as devtools show log;
@@ -77,14 +79,15 @@ class _LoginViewState extends State<LoginView> {
                               devtools.log('User signed in: $user');
                               return Navigator.of(context)
                                   .pushNamedAndRemoveUntil(
-                                      '/home', (route) => false)
+                                      homeRoute, (route) => false)
                                   .then((_) {});
                             } on FirebaseAuthException catch (e) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text('Error signing in: ${e.code}'),
-                                duration: const Duration(seconds: 3),
-                              ));
+                              print(e.code);
+                              if (e.code == "INVALID_LOGIN_CREDENTIALS") {
+                                showErrorDialog(context, "Invalid Credentials");
+                              } else {
+                                showErrorDialog(context, e.code);
+                              }
                             }
                           },
                           child: const Text('Login'),
