@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_learning/constants/routes.dart';
 import 'package:flutter_learning/dialogs/show_error.dart';
+import 'package:flutter_learning/dialogs/show_success.dart';
+import 'package:flutter_learning/services/auth/auth_exceptions.dart';
+import 'package:flutter_learning/services/auth/auth_service.dart';
 import '../firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -69,35 +71,33 @@ class _RegisterviewState extends State<Registerview> {
                       Center(
                         child: TextButton(
                           onPressed: () async {
+                            final email = _email.text;
+                            final password = _password.text;
                             try {
-                              final userCredential = await FirebaseAuth.instance
-                                  .createUserWithEmailAndPassword(
-                                email: _email.text,
-                                password: _password.text,
-                              );
-                              final user = userCredential.user;
-                              await user!.sendEmailVerification();
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                    'Verification email sent to ${user.email}'),
-                                duration: const Duration(seconds: 3),
-                              ));
+                              await AuthService.firebase()
+                                  .createUser(email: email, password: password);
+                              final user = AuthService.firebase().currentUser;
+                              await AuthService.firebase()
+                                  .sendEmailVerification();
+                              // ScaffoldMessenger.of(context)
+                              //     .showSnackBar(SnackBar(
+                              //   content: Text(
+                              //       'Verification email sent to ${user!.email}'),
+                              //   duration: const Duration(seconds: 3),
+                              // ));
+                              await showSuccessDialog(context,
+                                  'Verification email sent to ${user!.email}');
                               return Navigator.of(context)
                                   .pushNamedAndRemoveUntil(
                                       verifyEmailRoute, (route) => false)
                                   .then((_) {});
-                            } on FirebaseAuthException catch (e) {
-                              if (e.code == "invalid-email") {
-                                showErrorDialog(context, "Invalid Email");
-                              } else if (e.code == "weak-password") {
-                                showErrorDialog(context, "Weak Password");
-                              } else if (e.code == "email-already-in-use") {
-                                showErrorDialog(
-                                    context, "Email Already in Use");
-                              } else {
-                                showErrorDialog(context, e.code);
-                              }
+                            } on InvalidEmail {
+                              await showErrorDialog(context, 'Invalid Email');
+                            } on WeakPassword {
+                              await showErrorDialog(context, 'Weak Password');
+                            } on EmailAlreadyInUse {
+                              await showErrorDialog(
+                                  context, 'Email Already in Use');
                             }
                           },
                           child: const Text('Register'),
