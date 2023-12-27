@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_learning/constants/routes.dart';
 import 'package:flutter_learning/dialogs/show_error.dart';
+import 'package:flutter_learning/dialogs/show_success.dart';
 import 'package:flutter_learning/services/auth/auth_exceptions.dart';
 import 'package:flutter_learning/services/auth/auth_service.dart';
 import '../firebase_options.dart';
@@ -75,34 +76,29 @@ class _RegisterviewState extends State<Registerview> {
                             try {
                               await AuthService.firebase()
                                   .createUser(email: email, password: password);
-                              // final user = AuthService.firebase().currentUser;
+                              final user = AuthService.firebase().currentUser;
                               await AuthService.firebase()
                                   .sendEmailVerification();
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                    'Verification email sent to ${AuthService.firebase().currentUser}'),
-                                duration: const Duration(seconds: 3),
-                              ));
+                              // ScaffoldMessenger.of(context)
+                              //     .showSnackBar(SnackBar(
+                              //   content: Text(
+                              //       'Verification email sent to ${user!.email}'),
+                              //   duration: const Duration(seconds: 3),
+                              // ));
+                              await showSuccessDialog(context,
+                                  'Verification email sent to ${user!.email}');
                               return Navigator.of(context)
                                   .pushNamedAndRemoveUntil(
                                       verifyEmailRoute, (route) => false)
                                   .then((_) {});
                             } on InvalidEmail {
                               await showErrorDialog(context, 'Invalid Email');
+                            } on WeakPassword {
+                              await showErrorDialog(context, 'Weak Password');
+                            } on EmailAlreadyInUse {
+                              await showErrorDialog(
+                                  context, 'Email Already in Use');
                             }
-                            // } on FirebaseAuthException catch (e) {
-                            //   if (e.code == "invalid-email") {
-                            //     showErrorDialog(context, "Invalid Email");
-                            //   } else if (e.code == "weak-password") {
-                            //     showErrorDialog(context, "Weak Password");
-                            //   } else if (e.code == "email-already-in-use") {
-                            //     showErrorDialog(
-                            //         context, "Email Already in Use");
-                            //   } else {
-                            //     showErrorDialog(context, e.code);
-                            //   }
-                            // }
                           },
                           child: const Text('Register'),
                         ),

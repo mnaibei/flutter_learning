@@ -28,11 +28,11 @@ class AuthService implements AuthProvider {
   Future<void> sendEmailVerification() => provider.sendEmailVerification();
 
   @override
-  Future<AuthUser> signIn({
+  Future<AuthUser> logIn({
     required String email,
     required String password,
   }) =>
-      provider.signIn(
+      provider.logIn(
         email: email,
         password: password,
       );

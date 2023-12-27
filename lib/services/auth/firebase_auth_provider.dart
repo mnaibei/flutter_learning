@@ -5,6 +5,7 @@ import 'package:flutter_learning/services/auth/auth_provider.dart';
 import 'package:flutter_learning/services/auth/auth_exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
+import 'dart:developer' as devtools show log;
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
@@ -13,7 +14,7 @@ class FirebaseAuthProvider implements AuthProvider {
     required String password,
   }) async {
     try {
-      FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
@@ -39,8 +40,9 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
+    devtools.log('Current user => $user');
     if (user != null) {
-      return AuthUser.fromFirebaseUser(user);
+      return AuthUser.fromFirebase(user);
     } else {
       return null;
     }
@@ -67,12 +69,12 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<AuthUser> signIn({
+  Future<AuthUser> logIn({
     required String email,
     required String password,
   }) async {
     try {
-      FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
@@ -84,8 +86,12 @@ class FirebaseAuthProvider implements AuthProvider {
       if (e.code == "INVALID_LOGIN_CREDENTIALS") {
         throw InvalidLoginCredentials();
       } else {
-        throw UnknownException();
+        devtools.log('will there be an error here? $e');
+        throw UserNotFound();
       }
+    } catch (_) {
+      devtools.log('this is the error in firebase auth provider $_');
+      throw UserNotFound();
     }
   }
 

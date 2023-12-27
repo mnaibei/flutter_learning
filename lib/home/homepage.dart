@@ -27,8 +27,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                            'Logged in as ${AuthService.firebase().currentUser}'),
+                        Text('Logged in as ${user!.email}'),
                         ElevatedButton(
                           onPressed: () async {
                             AuthService.firebase().logOut();
