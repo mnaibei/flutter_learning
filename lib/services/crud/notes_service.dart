@@ -5,14 +5,25 @@ import 'package:path/path.dart' show join;
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory, MissingPlatformDirectoryException;
+import 'dart:developer' as devtools show log;
 
 class NotesService {
   Database? _db;
 
   List<DatabaseNote> _notes = [];
 
-  final _notesStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  //singleton
+  static final NotesService _shared = NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
+  factory NotesService() => _shared;
+
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
 
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
@@ -130,12 +141,16 @@ class NotesService {
       isSyncedToCloudColumn: 1,
     });
 
+    devtools.log(noteId.toString());
+
     final note = DatabaseNote(
       id: noteId,
       userId: owner.id,
       text: text,
       isSyncedToCloud: true,
     );
+
+    devtools.log(note.toString());
 
     _notes.add(note);
     _notesStreamController.add(_notes);
@@ -301,7 +316,7 @@ class DatabaseNote {
 
   @override
   String toString() =>
-      'Note, id = $id, userId = $userId, synced = $isSyncedToCloud';
+      'Note, id = $id, userId = $userId, synced = $isSyncedToCloud, text = $text';
 
   @override
   bool operator ==(covariant DatabaseNote other) => id == other.id;

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_learning/constants/routes.dart';
+import 'package:flutter_learning/views/notes/new_notes_view.dart';
 import 'home/homepage.dart'; // Import the Home component
 import 'views/register_view.dart'; // Import the Home component
 import 'views/login_view.dart'; // Import the Home component
 import 'views/verify_email_view.dart'; // Import the Verify Email component
-import 'views/notes_view.dart'; // Import the Notes component
+import 'views/notes/notes_view.dart'; // Import the Notes component
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         registerRoute: (context) => const Registerview(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
         notesRoute: (context) => const NotesView(),
+        newNoteRoute: (context) => const NewNotesView(),
       },
     );
   }

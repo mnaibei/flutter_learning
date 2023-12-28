@@ -23,22 +23,22 @@ class _NotesViewState extends State<NotesView> {
   @override
   void initState() {
     _notesService = NotesService();
-    _notesService.open();
+    // _notesService.open();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _notesService.close();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _notesService.close();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notes'),
         actions: [
+          // IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
           PopupMenuButton<MenuAction>(
             onSelected: (action) async {
               switch (action) {
@@ -60,6 +60,7 @@ class _NotesViewState extends State<NotesView> {
             ],
           ),
         ],
+        title: const Text('Notes'),
       ),
       body: FutureBuilder(
         future: _notesService.getOrCreateUser(email: userEmail),
@@ -71,7 +72,29 @@ class _NotesViewState extends State<NotesView> {
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                        return const Center(child: Text("Loading..."));
+                      case ConnectionState.active:
+                        if (snapshot.hasData) {
+                          final allNotes = snapshot.data as List<DatabaseNote>;
+                          print(allNotes);
+                          return ListView.builder(
+                            itemCount: allNotes.length,
+                            itemBuilder: (context, index) {
+                              final note = allNotes[index];
+                              return ListTile(
+                                title: Text(
+                                  note.text,
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return const Center(
+                            child: Text('No notes'),
+                          );
+                        }
                       default:
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -88,10 +111,7 @@ class _NotesViewState extends State<NotesView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to the screen where users can create a new note
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => NewNoteScreen()),
-          // );
+          Navigator.of(context).pushNamed(newNoteRoute);
         },
         child: const Icon(Icons.add),
       ),
