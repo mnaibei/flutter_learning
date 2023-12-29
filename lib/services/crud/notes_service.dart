@@ -5,7 +5,6 @@ import 'package:path/path.dart' show join;
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory, MissingPlatformDirectoryException;
-import 'dart:developer' as devtools show log;
 
 class NotesService {
   Database? _db;
@@ -14,13 +13,16 @@ class NotesService {
 
   //singleton
   static final NotesService _shared = NotesService._sharedInstance();
+
   NotesService._sharedInstance() {
     _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
       onListen: () {
         _notesStreamController.sink.add(_notes);
       },
     );
+    _cacheNotes(); // Load notes from the database
   }
+
   factory NotesService() => _shared;
 
   late final StreamController<List<DatabaseNote>> _notesStreamController;
@@ -141,16 +143,12 @@ class NotesService {
       isSyncedToCloudColumn: 1,
     });
 
-    devtools.log(noteId.toString());
-
     final note = DatabaseNote(
       id: noteId,
       userId: owner.id,
       text: text,
       isSyncedToCloud: true,
     );
-
-    devtools.log(note.toString());
 
     _notes.add(note);
     _notesStreamController.add(_notes);
@@ -236,24 +234,10 @@ class NotesService {
 
       _db = db;
 
-      const createUserTable = ''' CREATE TABLE IF NOT EXISTS "users"(
-        "id" INTEGER NOT NULL,
-        "email" TEXT NOT NULL UNIQUE,
-        PRIMARY KEY ("id" AUTOINCREMENT)
-      );''';
-
       await db.execute(createUserTable);
 
-      const createNotesTable = ''' CREATE TABLE IF NOT EXISTS "notes"(
-        "id" INTEGER NOT NULL,
-        "user_id" INTEGER NOT NULL,
-        "text" TEXT,
-        "is_synced_to_cloud" INTEGER NOT NULL DEFAULT 0,
-        FOREIGN KEY('user_id') REFERENCES "user"("id")
-        PRIMARY KEY ("id" AUTOINCREMENT)
-      );''';
-
       await db.execute(createNotesTable);
+
       await _cacheNotes();
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentsDirectory();
@@ -333,3 +317,16 @@ const userIdColumn = 'user_id';
 const emailColumn = "email";
 const textColumn = 'text';
 const isSyncedToCloudColumn = 'is_synced_to_cloud';
+const createUserTable = ''' CREATE TABLE IF NOT EXISTS "users"(
+        "id" INTEGER NOT NULL,
+        "email" TEXT NOT NULL UNIQUE,
+        PRIMARY KEY ("id" AUTOINCREMENT)
+      );''';
+const createNotesTable = ''' CREATE TABLE IF NOT EXISTS "notes"(
+        "id" INTEGER NOT NULL,
+        "user_id" INTEGER NOT NULL,
+        "text" TEXT,
+        "is_synced_to_cloud" INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY('user_id') REFERENCES "user"("id")
+        PRIMARY KEY ("id" AUTOINCREMENT)
+      );''';

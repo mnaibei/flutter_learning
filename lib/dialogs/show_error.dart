@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_learning/dialogs/generic_dialog.dart';
 
-Future<void> showErrorDialog(BuildContext context, String message) async {
-  return await showDialog(
+Future<void> showErrorDialog(
+  BuildContext context,
+  String text,
+) async {
+  return showGenericDialog<void>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('An error occurred'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      });
+      title: 'An error occurred',
+      content: text,
+      optionsBuilder: () => {
+            'Ok': null,
+          });
 }

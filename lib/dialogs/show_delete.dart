@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_learning/dialogs/generic_dialog.dart';
 
-Future<bool> showLogoutDialog(
+Future<bool> showDeleteDialog(
   BuildContext context,
 ) async {
   return showGenericDialog<bool>(
       context: context,
-      title: 'Logout',
-      content: 'Are you sure you want to logout?',
+      title: 'Delete',
+      content: 'Are you sure you want to delete this item?',
       optionsBuilder: () => {
             'Cancel': false,
-            'Logout': true,
+            'Delete': true,
           }).then(
     (value) => value ?? false,
   );

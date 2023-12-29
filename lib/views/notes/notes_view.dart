@@ -6,6 +6,8 @@ import 'package:flutter_learning/constants/routes.dart';
 import 'package:flutter_learning/dialogs/show_logout.dart';
 import 'package:flutter_learning/services/auth/auth_service.dart';
 import 'package:flutter_learning/services/crud/notes_service.dart';
+import 'package:flutter_learning/views/notes/notes_list_view.dart';
+import 'dart:developer' as devtools show log;
 
 enum MenuAction { logout }
 
@@ -27,11 +29,11 @@ class _NotesViewState extends State<NotesView> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   _notesService.close();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _notesService.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,24 +75,20 @@ class _NotesViewState extends State<NotesView> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                       case ConnectionState.active:
-                        if (snapshot.hasData) {
+                        if (snapshot.hasData &&
+                            (snapshot.data as List).isNotEmpty) {
                           final allNotes = snapshot.data as List<DatabaseNote>;
                           print(allNotes);
-                          return ListView.builder(
-                            itemCount: allNotes.length,
-                            itemBuilder: (context, index) {
-                              final note = allNotes[index];
-                              return ListTile(
-                                title: Text(
-                                  note.text,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                          return NotesListView(
+                            notes: allNotes,
+                            onDeleteNote: (note) async {
+                              await _notesService.deleteNote(
+                                id: note.id,
                               );
                             },
                           );
                         } else {
+                          devtools.log("The screen should display 'No notes'");
                           return const Center(
                             child: Text('No notes'),
                           );
