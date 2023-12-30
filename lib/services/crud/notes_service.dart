@@ -20,7 +20,6 @@ class NotesService {
         _notesStreamController.sink.add(_notes);
       },
     );
-    _cacheNotes(); // Load notes from the database
   }
 
   factory NotesService() => _shared;
