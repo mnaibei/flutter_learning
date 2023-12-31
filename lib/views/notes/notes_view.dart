@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_learning/constants/routes.dart';
-import 'package:flutter_learning/dialogs/show_logout.dart';
+import 'package:flutter_learning/utilities/dialogs/show_logout.dart';
 import 'package:flutter_learning/services/auth/auth_service.dart';
 import 'package:flutter_learning/services/crud/notes_service.dart';
 import 'package:flutter_learning/views/notes/notes_list_view.dart';
@@ -85,6 +85,12 @@ class _NotesViewState extends State<NotesView> {
                                 id: note.id,
                               );
                             },
+                            onTap: (note) {
+                              Navigator.of(context).pushNamed(
+                                createOrUpdateNoteRoute,
+                                arguments: note,
+                              );
+                            },
                           );
                         } else {
                           return const Center(
@@ -107,7 +113,7 @@ class _NotesViewState extends State<NotesView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to the screen where users can create a new note
-          Navigator.of(context).pushNamed(newNoteRoute);
+          Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
         },
         child: const Icon(Icons.add),
       ),

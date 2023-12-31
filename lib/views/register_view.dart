@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_learning/constants/routes.dart';
-import 'package:flutter_learning/dialogs/show_error.dart';
-import 'package:flutter_learning/dialogs/show_success.dart';
+import 'package:flutter_learning/utilities/dialogs/show_error.dart';
+import 'package:flutter_learning/utilities/dialogs/show_success.dart';
 import 'package:flutter_learning/services/auth/auth_exceptions.dart';
 import 'package:flutter_learning/services/auth/auth_service.dart';
 import '../firebase_options.dart';

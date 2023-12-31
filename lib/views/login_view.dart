@@ -3,7 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_learning/constants/routes.dart';
-import 'package:flutter_learning/dialogs/show_error.dart';
+import 'package:flutter_learning/utilities/dialogs/show_error.dart';
 import 'package:flutter_learning/services/auth/auth_exceptions.dart';
 import 'package:flutter_learning/services/auth/auth_service.dart';
 import 'package:flutter_learning/views/register_view.dart';
