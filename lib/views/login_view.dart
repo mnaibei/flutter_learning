@@ -20,6 +20,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  bool _isObscured = true;
 
   @override
   void initState() {
@@ -62,11 +63,20 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       TextField(
                         controller: _password,
-                        obscureText: true,
+                        obscureText: _isObscured,
                         autocorrect: false,
                         enableSuggestions: false,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Password',
+                          suffixIcon: IconButton(
+                              icon: const Icon(
+                                Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscured = !_isObscured;
+                                });
+                              }),
                         ),
                       ),
                       Center(
@@ -83,13 +93,6 @@ class _LoginViewState extends State<LoginView> {
                                   .pushNamedAndRemoveUntil(
                                       homeRoute, (route) => false)
                                   .then((_) {});
-                              // } on FirebaseAuthException catch (e) {
-                              //   print(e);
-                              //   devtools.log(e.toString());
-                              //   if (e.code == "INVALID_LOGIN_CREDENTIALS") {
-                              //     await showErrorDialog(
-                              //         context, 'Invalid login credentials');
-                              //   }
                             } on InvalidLoginCredentials {
                               await showErrorDialog(
                                   context, 'Invalid Login Credentials');
