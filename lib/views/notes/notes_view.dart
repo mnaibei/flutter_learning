@@ -33,7 +33,6 @@ class _NotesViewState extends State<NotesView> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          // IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
           PopupMenuButton<MenuAction>(
             onSelected: (action) async {
               switch (action) {
