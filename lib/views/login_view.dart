@@ -83,13 +83,6 @@ class _LoginViewState extends State<LoginView> {
                                   .pushNamedAndRemoveUntil(
                                       homeRoute, (route) => false)
                                   .then((_) {});
-                              // } on FirebaseAuthException catch (e) {
-                              //   print(e);
-                              //   devtools.log(e.toString());
-                              //   if (e.code == "INVALID_LOGIN_CREDENTIALS") {
-                              //     await showErrorDialog(
-                              //         context, 'Invalid login credentials');
-                              //   }
                             } on InvalidLoginCredentials {
                               await showErrorDialog(
                                   context, 'Invalid Login Credentials');
