@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_learning/constants/routes.dart';
-import 'package:flutter_learning/dialogs/show_error.dart';
-import 'package:flutter_learning/dialogs/show_success.dart';
+import 'package:flutter_learning/utilities/dialogs/show_error.dart';
+import 'package:flutter_learning/utilities/dialogs/show_success.dart';
 import 'package:flutter_learning/services/auth/auth_exceptions.dart';
 import 'package:flutter_learning/services/auth/auth_service.dart';
 import '../firebase_options.dart';
@@ -19,6 +19,7 @@ class Registerview extends StatefulWidget {
 class _RegisterviewState extends State<Registerview> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  bool _isObscured = true;
 
   @override
   void initState() {
@@ -61,11 +62,20 @@ class _RegisterviewState extends State<Registerview> {
                       ),
                       TextField(
                         controller: _password,
-                        obscureText: true,
+                        obscureText: _isObscured,
                         autocorrect: false,
                         enableSuggestions: false,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Password',
+                          suffixIcon: IconButton(
+                              icon: const Icon(
+                                Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscured = !_isObscured;
+                                });
+                              }),
                         ),
                       ),
                       Center(
@@ -79,12 +89,6 @@ class _RegisterviewState extends State<Registerview> {
                               final user = AuthService.firebase().currentUser;
                               await AuthService.firebase()
                                   .sendEmailVerification();
-                              // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(SnackBar(
-                              //   content: Text(
-                              //       'Verification email sent to ${user!.email}'),
-                              //   duration: const Duration(seconds: 3),
-                              // ));
                               await showSuccessDialog(context,
                                   'Verification email sent to ${user!.email}');
                               return Navigator.of(context)

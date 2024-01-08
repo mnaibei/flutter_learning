@@ -1,7 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_learning/constants/routes.dart';
-import 'package:flutter_learning/dialogs/show_success.dart';
+import 'package:flutter_learning/utilities/dialogs/show_success.dart';
 import 'package:flutter_learning/services/auth/auth_service.dart';
 
 class VerifyEmailView extends StatefulWidget {
