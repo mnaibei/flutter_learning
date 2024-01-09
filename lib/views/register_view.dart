@@ -84,7 +84,7 @@ class _RegisterviewState extends State<Registerview> {
                               //   content: Text(
                               //       'Verification email sent to ${user!.email}'),
                               //   duration: const Duration(seconds: 3),
-                              // ));
+
                               await showSuccessDialog(context,
                                   'Verification email sent to ${user!.email}');
                               return Navigator.of(context)
