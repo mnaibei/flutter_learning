@@ -28,18 +28,11 @@ class _NotesViewState extends State<NotesView> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   _notesService.close();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          // IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
           PopupMenuButton<MenuAction>(
             onSelected: (action) async {
               switch (action) {
