@@ -1,97 +1,37 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
+import 'package:flutter_learning/constants/routes.dart';
+import 'package:flutter_learning/views/notes/create_update_note_view.dart';
+import 'home/homepage.dart'; // Import the Home component
+import 'views/register_view.dart'; // Import the Home component
+import 'views/login_view.dart'; // Import the Home component
+import 'views/verify_email_view.dart'; // Import the Verify Email component
+import 'views/notes/notes_view.dart'; // Import the Notes component
 
 void main() {
-  runApp(MaterialApp(
-    title: 'Flutter Demo',
-    theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-      useMaterial3: true,
-    ),
-    home: const HomePage(),
-  ));
+  runApp(const MyApp());
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-
-  @override
-  void initState() {
-    WidgetsFlutterBinding.ensureInitialized();
-    _email = TextEditingController();
-    _password = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Register'),
-        ),
-        body: FutureBuilder(
-            future: Firebase.initializeApp(
-              options: DefaultFirebaseOptions.currentPlatform,
-            ),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.done:
-                  return Column(
-                    children: [
-                      TextField(
-                        controller: _email,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                        ),
-                      ),
-                      TextField(
-                        controller: _password,
-                        obscureText: true,
-                        autocorrect: false,
-                        enableSuggestions: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                        ),
-                      ),
-                      Center(
-                        child: TextButton(
-                          onPressed: () async {
-                            final user = await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                                    email: _email.text,
-                                    password: _password.text);
-                            print(user);
-                          },
-                          child: const Text('Register'),
-                        ),
-                      ),
-                    ],
-                  );
-                default:
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-              }
-            }));
+    return MaterialApp(
+      title: 'Flutter App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      // Use the imported components here
+      home: const LoginView(),
+      routes: {
+        // Add the routes here
+        homeRoute: (context) => const HomePage(),
+        loginRoute: (context) => const LoginView(),
+        registerRoute: (context) => const Registerview(),
+        verifyEmailRoute: (context) => const VerifyEmailView(),
+        notesRoute: (context) => const NotesView(),
+        createOrUpdateNoteRoute: (context) => const CreateUpdateNotesView(),
+      },
+    );
   }
 }
