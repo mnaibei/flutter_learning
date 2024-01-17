@@ -81,7 +81,6 @@ class _RegisterviewState extends State<Registerview> {
                                   .sendEmailVerification();
                               // ScaffoldMessenger.of(context)
                               //     .showSnackBar(SnackBar(
-                              //   content: Text(
                               await showSuccessDialog(context,
                                   'Verification email sent to ${user!.email}');
                               return Navigator.of(context)
