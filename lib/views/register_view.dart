@@ -80,7 +80,6 @@ class _RegisterviewState extends State<Registerview> {
                               await AuthService.firebase()
                                   .sendEmailVerification();
                               // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(SnackBar(
                               await showSuccessDialog(context,
                                   'Verification email sent to ${user!.email}');
                               return Navigator.of(context)
