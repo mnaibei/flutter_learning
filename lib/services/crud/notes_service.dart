@@ -15,6 +15,7 @@ class NotesService {
   DatabaseUser? _user;
 
   //singleton
+  //TODO research
   static final NotesService _shared = NotesService._sharedInstance();
 
   NotesService._sharedInstance() {
