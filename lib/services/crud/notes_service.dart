@@ -246,7 +246,7 @@ class NotesService {
     try {
       await open();
     } on DbAlreadyOpenException {
-      // Do nothing
+      // Do nothing.
     }
   }
 
