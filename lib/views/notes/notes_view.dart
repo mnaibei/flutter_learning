@@ -69,7 +69,7 @@ class _NotesViewState extends State<NotesView> {
                         if (snapshot.hasData &&
                             (snapshot.data as List).isNotEmpty) {
                           final allNotes = snapshot.data as List<DatabaseNote>;
-                          // print(
+                          // print
                           return NotesListView(
                             notes: allNotes,
                             onDeleteNote: (note) async {
