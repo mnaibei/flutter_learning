@@ -15,6 +15,7 @@ class NotesService {
   DatabaseUser? _user;
 
   //singleton
+  //TODO research
   static final NotesService _shared = NotesService._sharedInstance();
 
   NotesService._sharedInstance() {
@@ -245,7 +246,7 @@ class NotesService {
     try {
       await open();
     } on DbAlreadyOpenException {
-      // Do nothing
+      // Do nothing.
     }
   }
 

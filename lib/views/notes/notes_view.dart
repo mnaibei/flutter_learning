@@ -24,7 +24,6 @@ class _NotesViewState extends State<NotesView> {
   @override
   void initState() {
     _notesService = NotesService();
-    // _notesService.open();
     super.initState();
   }
 
@@ -70,7 +69,7 @@ class _NotesViewState extends State<NotesView> {
                         if (snapshot.hasData &&
                             (snapshot.data as List).isNotEmpty) {
                           final allNotes = snapshot.data as List<DatabaseNote>;
-                          print(allNotes);
+                          // print
                           return NotesListView(
                             notes: allNotes,
                             onDeleteNote: (note) async {
